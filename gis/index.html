@@ -27,7 +27,7 @@
             packages: [
             {
                 name: "Common",
-                location: location.pathname.replace(/\/[^/]*$/, '') + '/'
+                location: location.pathname.replace(/\/[^/]*$/, '')
             }
             ],
             map: {
@@ -233,7 +233,7 @@
 
 
         // Load map and app
-        require(["esri/map", "app", "calc", "dojo/_base/declare", "Common/_employee", "dojo/domReady!"],
+        require(["esri/map", "app", "calc", "dojo/_base/declare", "Common/Employee", "dojo/domReady!"],
             function (Map, app, calc, declare, Employee, utils) {
                 "use-strict"
 
