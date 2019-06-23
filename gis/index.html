@@ -19,6 +19,8 @@
     </style>
 
     <script>
+        var package_path = "//arockia1982.github.io/gis/Lib/Common";
+
         var dojoConfig = {
             async: true,
             // Don't attempt to parse the page for widgets
@@ -26,7 +28,7 @@
             packages: [
             {
                 name: "Common",
-                location: location.pathname.replace(/\/[^/]*$/, '') + '/Lib/Common'
+                    location: package_path
             }
             ],
             map: {
