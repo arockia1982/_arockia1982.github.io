@@ -1,4 +1,4 @@
-define(["dojo/_base/declare", "Common/_department"], function (declare, Department) {
+define(["dojo/_base/declare", "Common/department"], function (declare, Department) {
     // Create a new class
     var Employee = declare(Department, {
         // The default username
