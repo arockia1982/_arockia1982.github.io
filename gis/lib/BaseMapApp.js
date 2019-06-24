@@ -1,4 +1,4 @@
- define("app", ["BaseMapModel", "dojo/dom", "dojo/on", "dojo/domReady!"],
+ define("app", ["Common/BaseMapModel", "dojo/dom", "dojo/on", "dojo/domReady!"],
             function (model, dom, on) {
                 "use strict"
                 var m = {
