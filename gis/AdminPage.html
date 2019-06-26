@@ -1,0 +1,544 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>ConnectOriginsToDestinations</title>
+    <link rel="stylesheet" href="https://js.arcgis.com/3.28/dijit/themes/claro/claro.css" />
+    <link rel="stylesheet" href="https://js.arcgis.com/3.28/esri/css/esri.css" />
+    <style>
+        html,
+        body,
+        #border-container {
+            height: 100%;
+            margin: 0;
+        }
+
+        #pointGrid {
+            height: 30em;
+        }
+
+        #lineGrid {
+            height: 30em;
+        }
+
+        #polygonGrid {
+            height: 30em;
+        }
+
+        /* Don't display the analysis widget's close icon*/
+        .esriAnalysis .esriAnalysisCloseIcon {
+            display: none;
+        }
+    </style>
+    <script src="https://js.arcgis.com/3.28/"></script>
+    <script>
+        var map;
+        require([
+            "dojo/ready",
+            "dojo/parser",
+            "esri/urlUtils",
+            "esri/map",
+            "esri/layers/FeatureLayer",
+            "esri/dijit/analysis/ConnectOriginsToDestinations",
+            "dojox/charting/Chart", "dojox/charting/axis2d/Default", "dojox/charting/plot2d/Lines",
+            "dojox/charting/action2d/MouseIndicator",
+            "dojox/charting/plot2d/Scatter", "dojox/charting/themes/Julie",
+            "dojox/charting/plot2d/Columns",
+            "dojox/charting/action2d/TouchIndicator",
+            "dojox/charting/plot2d/Pie", "dojox/charting/action2d/Highlight",
+            "dojox/charting/action2d/MoveSlice", "dojox/charting/action2d/Tooltip",
+            "dojox/charting/themes/MiamiNice", "dojox/charting/widget/Legend",
+            "esri/InfoTemplate",
+            'dojo/_base/lang', 'dojox/grid/DataGrid', 'dojo/data/ItemFileWriteStore', 'dojo/dom',
+            "esri/toolbars/draw",
+            "esri/symbols/SimpleMarkerSymbol", "esri/symbols/SimpleLineSymbol",
+            "esri/symbols/PictureFillSymbol", "esri/symbols/CartographicLineSymbol",
+            "esri/graphic",
+            "esri/Color", "esri/layers/GraphicsLayer", "dojo/store/Observable", "dojo/store/Memory",
+            "dojox/charting/plot2d/StackedAreas",
+            "dojo/data/ObjectStore", "dojox/charting/StoreSeries", 'dojo/_base/json', "dojox/charting/themes/Claro", "dijit/form/Form", "dojo/on",
+            "dijit/layout/BorderContainer",
+            "dijit/layout/ContentPane",
+            "dijit/form/TextBox",
+            "dijit/form/DateTextBox",
+            "dijit/form/FilteringSelect",
+            "dijit/form/Form",
+            "dojo/store/JsonRest",
+            "dijit/form/Button",
+            "dojo/domReady!"
+        ], function (
+            ready,
+            parser,
+            urlUtils,
+            Map,
+            FeatureLayer,
+            ConnectOriginsToDestinations,
+            Chart, Default, Lines, MouseIndicator, Scatter, Julie, Columns, TouchIndicator,
+            Pie, Highlight, MoveSlice, Tooltip, MiamiNice, Legend,
+            InfoTemplate, lang, DataGrid, ItemFileWriteStore, dom, Draw,
+            SimpleMarkerSymbol, SimpleLineSymbol,
+            PictureFillSymbol, CartographicLineSymbol,
+            Graphic,
+            Color, GraphicsLayer, Observable, Memory, StackedAreas, ObjectStore, StoreSeries, dojojson, Claro, Form, on
+        ) {
+                ready(function () {
+                    parser.parse();
+
+                    map = new Map("map", {
+                        basemap: "topo",
+                        center: [-117.76, 34.06],
+                        zoom: 10
+                    });
+
+                    var countyLayer = new GraphicsLayer();
+
+                    map.addLayer(countyLayer);
+
+                    map.on("load", initToolbar);
+
+                    // markerSymbol is used for point and multipoint, see http://raphaeljs.com/icons/#talkq for more examples
+                    var markerSymbol = new SimpleMarkerSymbol();
+                    markerSymbol.setPath("M16,4.938c-7.732,0-14,4.701-14,10.5c0,1.981,0.741,3.833,2.016,5.414L2,25.272l5.613-1.44c2.339,1.316,5.237,2.106,8.387,2.106c7.732,0,14-4.701,14-10.5S23.732,4.938,16,4.938zM16.868,21.375h-1.969v-1.889h1.969V21.375zM16.772,18.094h-1.777l-0.176-8.083h2.113L16.772,18.094z");
+                    markerSymbol.setColor(new Color("#00FFFF"));
+
+
+                    // lineSymbol used for freehand polyline, polyline and line.
+                    var lineSymbol = new CartographicLineSymbol(
+                        CartographicLineSymbol.STYLE_SOLID,
+                        new Color([255, 0, 0]), 10,
+                        CartographicLineSymbol.CAP_ROUND,
+                        CartographicLineSymbol.JOIN_MITER, 5
+                    );
+
+                    // fill symbol used for extent, polygon and freehand polygon, use a picture fill symbol
+                    // the images folder contains additional fill images, other options: sand.png, swamp.png or stiple.png
+                    var fillSymbol = new PictureFillSymbol(
+                        "images/mangrove.png",
+                        new SimpleLineSymbol(
+                            SimpleLineSymbol.STYLE_SOLID,
+                            new Color('#000'),
+                            1
+                        ),
+                        42,
+                        42
+                    );
+
+                    var layout, pointDataStore, lineDataStore, polygonDataStore, pointGrid, lineGrid, polygonGrid, form;
+
+                    /*set up layout*/
+                    layout = [
+                        { 'name': 'First name', 'field': 'first', 'width': '100px' },
+                        { 'name': 'Last Name', 'field': 'last', 'width': '100px' },
+                        { 'name': 'DOB', 'field': 'dob', 'width': '200px' }
+                    ];
+
+                    pointDataStore = new ObjectStore({ objectStore: new Memory() });
+                    lineDataStore = new ObjectStore({ objectStore: new Memory() });
+                    polygonDataStore = new ObjectStore({ objectStore: new Memory() });
+
+                    // Initial data
+                    var data = [
+                        // This information, presumably, would come from a database or web service
+                        // Note that the values for site are either 1 or 2
+                        { id: 1, value: 0, site: 1 },
+                        { id: 2, value: 0, site: 2 },
+                        { id: 3, value: 0, site: 3 },
+                        { id: 4, value: 0, site: 4 }
+                       
+                    ];
+
+                    // Create the data store
+                    // Store information in a data store on the client side
+                    var store = new Observable(new Memory({
+                        data: {
+                            identifier: "id",
+                            label: "Users Online",
+                            items: data
+                        }
+                    }));
+
+                    
+                    // Create the chart within it's "holding" node
+                    // Global so users can hit it from the console
+                    chart = new Chart("chartTwo");
+
+                    // Set the theme
+                    chart.setTheme(Claro);
+
+                    // Add the only/default plot
+                    chart.addPlot("default", { type: StackedAreas, tension: 3 });
+
+                    // Add axes
+                    chart.addAxis("x", { fixLower: "major", fixUpper: "major" })
+                    chart.addAxis("y", { vertical: true, fixLower: "major", fixUpper: "major", min: 0 });
+
+                    chart.addSeries("Series A", new StoreSeries(store, { query: { site: 1 } }, "value"))
+                    chart.addSeries("Series B", new StoreSeries(store, { query: { site: 2 } }, "value"))
+                    chart.addSeries("Series C", new StoreSeries(store, { query: { site: 3 } }, "value"))
+
+                    // Add the storeseries - Query for all data
+                    //chart.addSeries("y", new StoreSeries(store, { query: { site: 1 } }, "value"));
+                    //chart.addSeries("y2", new StoreSeries(store, { query: { site: 2 } }, "value"));
+                    //chart.addSeries("y3", new StoreSeries(store, { query: { site: 3 } }, "value"));
+           
+
+                    // Render the chart!
+                    chart.render();
+
+
+                    /*create a new grid*/
+                    pointGrid = new DataGrid({
+                        store: pointDataStore,
+                        query: { id: "*" },
+                        queryOptions: {},
+                        structure: layout
+                    }, "pointGrid");
+
+                    /*Call startup() to render the grid*/
+                    pointGrid.startup();
+
+                    /*create a new grid*/
+                    lineGrid = new DataGrid({
+                        store: lineDataStore,
+                        query: { id: "*" },
+                        queryOptions: {},
+                        structure: layout
+                    }, "lineGrid");
+
+                    /*Call startup() to render the grid*/
+                    lineGrid.startup();
+
+                    /*create a new grid*/
+                    polygonGrid = new DataGrid({
+                        store: polygonDataStore,
+                        query: { id: "*" },
+                        queryOptions: {},
+                        structure: layout
+                    }, "polygonGrid");
+
+                    /*Call startup() to render the grid*/
+                    polygonGrid.startup();
+
+
+                    pointGrid.on("RowClick", lang.hitch(this, function (evt, data) {
+                        var idx = data.rowIndex, rowData = grid.getItem(idx);
+
+                        alert("ok");
+                    }, true));
+
+                    form = new Form({
+                        //onSubmit: function (evt) {
+                        //    evt.preventDefault();
+                        //    var formValue = this.get("value");
+                        //    console.debug(formValue);
+                        //    dataStore.newItem(formValue);
+                        //}
+                    }, "formContainer");
+                    form.startup();
+
+
+                    function initToolbar() {
+                        tb = new Draw(map);
+                        tb.on("draw-end", addGraphic);
+
+                        // event delegation so a click handler is not
+                        // needed for each individual button
+                        on(dom.byId("info"), "click", function (evt) {
+                            if (evt.target.id === "info") {
+                                return;
+                            }
+                            var tool = evt.target.id.toLowerCase();
+                            map.disableMapNavigation();
+                            tb.activate(tool);
+                        });
+                    }
+
+                    function addGraphic(evt) {
+                        //deactivate the toolbar and clear existing graphics
+                        tb.deactivate();
+                        map.enableMapNavigation();
+                        var nameTextBox = dom.byId("firstname").value;
+
+                        var attr = { "type": evt.geometry.type, "Id": nameTextBox };
+
+               
+
+                        // figure out which symbol to use
+                        var symbol;
+                        if (evt.geometry.type === "point" || evt.geometry.type === "multipoint") {
+                            symbol = markerSymbol;
+
+                            var formValue = { first: "asdasd", last: "asdasd", dob: "asdasd" };
+                            pointDataStore.newItem(formValue);
+
+                            var data = dojo.toJson(evt.geometry);
+
+                            countyLayer.add(new Graphic(evt.geometry, symbol, attr));
+
+                            addChartData(store,1);
+
+
+                        } else if (evt.geometry.type === "line" || evt.geometry.type === "polyline") {
+                            symbol = lineSymbol;
+
+                            var formValue = { first: "asdasd", last: "asdasd", dob: "asdasd" };
+                            lineDataStore.newItem(formValue);
+
+                            var data = dojo.toJson(evt.geometry);
+
+                            countyLayer.add(new Graphic(evt.geometry, symbol, attr));
+                            addChartData(store,2);
+                        }
+                        else {
+                            symbol = fillSymbol;
+
+                            var formValue = { first: "asdasd", last: "asdasd", dob: "asdasd" };
+                            polygonDataStore.newItem(formValue);
+
+
+                            var data = dojo.toJson(evt.geometry);
+
+                            countyLayer.add(new Graphic(evt.geometry, symbol, attr));
+                            addChartData(store,3);
+                        }
+
+                    }
+
+
+                    //var c = new Chart("scatter");
+                    //c.addPlot("default", { type: Scatter })
+                    //    .addAxis("x", { fixLower: "major", fixUpper: "major" })
+                    //    .addAxis("y", { vertical: true, fixLower: "major", fixUpper: "major", min: 0 })
+                    //    .setTheme(Julie)
+                    //    .addSeries("Series A", [1, 2, 0.5, 1.5, 1, 2.8, 0.4])
+                    //    .render();
+                });
+
+                var createAlert = dom.byId("createAlert");
+
+                on(createAlert, "click", function () {
+
+                    clearGraphics(map);
+
+                });
+
+
+                var createAlert = dom.byId("createAlert");
+
+                on(createAlert, "click", function () {
+
+                    clearGraphics(map);
+
+            });
+
+
+            function addChartData(store,siteNumber) {
+
+                if (store.query({ site: siteNumber }).length > 0) {
+
+                    var nextValue = store.query({ site: siteNumber }, {
+                        sort: [{
+                            attribute: "id",
+                            descending: true
+                        }]
+                    })[0].value + 8;
+
+                    var Id = store.query({ site: siteNumber }, {
+                        sort: [{
+                            attribute: "id",
+                            descending: true
+                        }]
+                    })[0].id + 1;
+
+                    store.put({ value: nextValue, id: Id, site: siteNumber });
+
+                    store.notify({ value: nextValue, id: Id, site: siteNumber });
+                }
+               
+            }
+
+
+                function clearGraphics() {
+                    //first remove all graphics added directly to map
+                    map.graphics.clear();
+
+                    //now go into each graphic layer and clear it
+                    var graphicLayerIds = map.graphicsLayerIds;
+                    var len = graphicLayerIds.length;
+                    for (var i = 0; i < len; i++) {
+                        var gLayer = map.getLayer(graphicLayerIds[i]);
+                        //clear this Layer
+                        gLayer.clear();
+                    }
+
+                }
+
+                //var chart = new Chart("test");
+                //var chart = new Chart("test");
+                //chart.addAxis("x", { type: Default, enableCache: true });
+                //chart.addAxis("y", { vertical: true });
+                //chart.addPlot("default", { type: Columns, enableCache: true });
+                //chart.addSeries("Series A", [1, 2, 0.5, 1.5, 1, 2.8, 0.4]);
+
+                //new TouchIndicator(chart, "default", {
+                //    series: "Series A", dualIndicator: true, font: "normal normal bold 16pt Tahoma",
+                //    fillFunc: function (v1, v2) {
+                //        if (v2) {
+                //            return v2.y > v1.y ? "green" : "red";
+                //        } else {
+                //            return "white";
+                //        }
+                //    }
+                //});
+                //chart.render();
+
+
+
+
+
+
+                ///*set up data store*/
+                //var data = {
+                //    identifier: "id",
+                //    items: []
+                //};
+                //var data_list = [
+                //    { col1: "normal", col2: false, col3: 'But are not followed by two hexadecimal' },
+                //    { col1: "important", col2: false, col3: 'Because a % sign always indicates' },
+                //    { col1: "important", col2: false, col3: 'Signs can be selectively' }
+                //];
+                //var rows = 60;
+                //for (var i = 0, l = data_list.length; i < rows; i++) {
+                //    data.items.push(lang.mixin({ id: i + 1 }, data_list[i % l]));
+                //}
+                //var store = new ItemFileWriteStore({ data: data });
+
+                ///*set up layout*/
+                //var layout = [[
+                //    { 'name': 'Name', 'field': 'id', 'width': '50px' },
+                //    { 'name': 'Date of Birth', 'field': 'col2', 'width': '100px' },
+                //    { 'name': 'Country', 'field': 'col3', 'width': '200px' }
+
+                //]];
+
+                ///*create a new grid*/
+                //var grid = new DataGrid({
+                //    id: 'grid',
+                //    store: store,
+                //    structure: layout,
+                //    rowSelector: '20px'
+                //});
+
+                ///*append the new grid to the div*/
+                //grid.placeAt("gridDiv");
+
+                ///*Call startup() to render the grid*/
+                //grid.startup();
+
+            });
+    </script>
+</head>
+<body class="claro">
+    <div id="border-container" data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="design:'headline',gutters:false">
+        <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'top'" style="width: 300px;height:50px;border:1px solid blue;">
+        </div>
+        <div id="map" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'" style="padding: 0;width:200px">
+        </div>
+        <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'left'" style="width: 500px;border:1px solid blue;">
+            <div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="design:'headline',gutters:false">
+                <!--<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'top'" style="width: 300px;height:100px;border:1px solid red">
+                </div>-->
+                <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'" style="width: 500px;border:1px solid red;border-radius: 10px;">
+                    <div data-dojo-type="dijit/form/Form" id="myForm" enctype="multipart/form-data" action="" method="">
+                        <table cellspacing="10">
+                            <tr>
+                                <td>
+                                    <label for="firstname">Name:</label>
+                                </td>
+                                <td>
+                                    <input type="text" id="firstname" dojo-data-id="firstname" data-dojo-type="dijit/form/TextBox" name="firstname" trim="true" propercase="true"></input>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label for="dob">Date of birth:</label>
+                                </td>
+                                <td>
+                                    <input type="text" dojo-data-id="dob" id="dob" name="dob" data-dojo-type="dijit/form/DateTextBox" value="2011-03-11"></input>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label for="country">Country of Origin:</label>
+                                </td>
+                                <td>
+                                    <div data-dojo-id="countryStore"></div>
+                                    <select dojo-data-id="country" id="country" name="country"
+                                            data-dojo-type="dijit/form/FilteringSelect">
+                                        <option value="TN">Tennessee</option>
+                                        <option value="VA" selected="selected">Virginia</option>
+                                        <option value="WA">Washington</option>
+                                        <option value="FL">Florida</option>
+                                        <option value="CA">California</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                    <button id="Submit1" type="button" data-dojo-type="dijit/form/Button">Submit Form</button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div id="pointGrid"></div>
+
+                    <div id="lineGrid"></div>
+
+                    <div id="polygonGrid"></div>
+
+                </div>
+                <!--<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'bottom'" style="width: 300px;height:100px;border:1px solid red">
+                </div>-->
+            </div>
+        </div>
+        <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'right'" style="width: 300px;height:200px;border:1px solid blue;border-radius: 10px;">
+            <div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="design:'headline',gutters:false">
+                <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'top'" style="width: 300px;height:100px;border:1px solid red;border-radius: 10px;">
+                </div>
+                <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'" style="width: 300px;border:1px solid red;border-radius: 10px;">
+                    <!--<div id="test" style="width: 400px; height: 240px; margin: 10px auto 0px auto;"></div>-->
+
+                    <div id="chartTwo" style="width: 300px; height: 300px;"></div>
+
+                    <div id="legendTwo"></div>
+
+                </div>
+                <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'bottom'" style="width: 300px;height:100px;border:1px solid red;border-radius: 10px;">
+                </div>
+            </div>
+        </div>
+        <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'bottom'" style="width: 300px;border:1px solid blue;">
+            <div id="info">
+                <div>Select a shape then draw on map to add graphic</div>
+                <button id="Point">Point</button>
+                <button id="Multipoint">Multipoint</button>
+                <button id="Line">Line</button>
+                <button id="Polyline">Polyline</button>
+                <button id="FreehandPolyline">Freehand Polyline</button>
+                <button id="Triangle">Triangle</button>
+                <button id="Extent">Rectangle</button>
+                <button id="Circle">Circle</button>
+                <button id="Ellipse">Ellipse</button>
+                <button id="Polygon">Polygon</button>
+                <button id="FreehandPolygon">Freehand Polygon</button>
+            </div>
+
+            <button id="createAlert">Clear Graphics</button>
+        </div>
+    </div>
+</body>
+</html>
