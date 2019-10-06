@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width = device-width, initial-scale = 1">
+    <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+
+
+    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+         
+
+    <style>
+        legend {
+            background-color: #000;
+            color: #fff;
+            padding: 3px 6px;
+        }
+
+        .output {
+            font: 1rem 'Fira Sans', sans-serif;
+        }
+
+        input {
+            margin: .4rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div data-role="page">
+        <div data-role="header">
+            <p style="font-size:12pt;"> Environment Mapping Project </h5>
+
+        </div>
+
+        <div data-role="main" class="ui-content">
+            <form method="post" action="demo.php">
+                <label for="Contractor">Contractor</label>
+                <input type="text" name="contractor" id="contractor"
+                       placeholder="Contractor">
+
+                <label for="projectsite">Project site</label>
+                <input type="text" name="projectsite" id="projectsite"
+                       placeholder="Project site">
+
+                <fieldset style="border:1px solid green;padding: 5px">
+                    <legend>Air Quality Standards</legend>
+
+                    <label for="Contractor">Sulfer Dioxide (SO2)</label>
+                    <input type="text" name="contractor" id="contractor"
+                           placeholder="Contractor">
+
+                    <label for="projectsite">Particulate Matter (PM10)</label>
+                    <input type="text" name="projectsite" id="projectsite"
+                           placeholder="Project site">
+
+                    <label for="projectsite">Particulate Matter (PM2.5)</label>
+                    <input type="text" name="projectsite" id="projectsite"
+                           placeholder="Project site">
+
+                    <label for="projectsite">Nitrogen Dioxide (NO2)</label>
+                    <input type="text" name="projectsite" id="projectsite"
+                           placeholder="Project site">
+
+                    <label for="projectsite">Ozone (O3)</label>
+                    <input type="text" name="projectsite" id="projectsite"
+                           placeholder="Project site">
+
+                    <label for="projectsite">Carbone Monoxide (co)</label>
+                    <input type="text" name="projectsite" id="projectsite"
+                           placeholder="Project site">
+
+                    <label for="projectsite">Lead</label>
+                    <input type="text" name="projectsite" id="projectsite"
+                           placeholder="Project site">
+
+
+                    <label for="projectsite">HydroCarbons</label>
+                    <input type="text" name="projectsite" id="projectsite"
+                           placeholder="Project site">
+
+                    <label for="projectsite">VOC PPB</label>
+                    <input type="text" name="projectsite" id="projectsite"
+                           placeholder="Project site">
+
+                </fieldset>
+
+                <fieldset style="border:1px solid green;padding: 5px">
+                    <ul>
+                        <li>
+                            <label for="AirQualityStandards"> Air Quality Standards</label>
+                            <input type="range" name="AirQualityStandards" min="0" max="10">
+                        </li>
+                        <li>
+                            <label for="AirQualityStandards"> Soil Contamination</label>
+                            <input type="range" name="SoilContamination" min="0" max="10">
+                        </li>
+                        <li>
+                            <label for="GroundWaterMonitoring"> Ground Water Monitoring</label>
+                            <input type="range" name="GroundWaterMonitoring" min="0" max="10">
+                        </li>
+                        <li>
+                            <label for="NonIonizationRadiationsMonitoring">Non-Ionization  Radiations Monitoring</label>
+                            <input type="range" name="NonIonizationRadiationsMonitoring" min="0" max="10">
+                        </li>
+                        <li>
+                            <label for=" NoiseMonitoring"> Noise Monitoring</label>
+                            <input type="range" name="NoiseMonitoring" min="0" max="10">
+                        </li>
+                    </ul>
+                </fieldset>
+
+
+                <label for="txtDate">Date and Time </label>
+                <input type="date" name="txtDate" id="txtDate">
+                <input type="time" name="txtTime" id="txtTime">
+
+                <label for="btnLocation">Please set your Location</label>
+                <a href="#rightpanel2" class="ui-btn ui-shadow ui-corner-all ui-btn-inline ui-btn-mini">Push</a>
+                <button id="btnLocation" onclick="getLocation()">Set Location</button>
+                <p id="demo"></p>
+
+
+                <script>
+
+                    function getLocation() {
+                        if (navigator.geolocation) {
+                            navigator.geolocation.getCurrentPosition(showPosition);
+                        } else {
+                            x.innerHTML = "Geolocation is not supported by this browser.";
+                        }
+                    }
+
+                    function showPosition(position) {
+                        var x = document.getElementById("demo");
+                        x.innerHTML = "Latitude: " + position.coords.latitude +
+                            "<br>Longitude: " + position.coords.longitude;
+                    }
+                </script>
+
+
+                <div data-role="panel" id="rightpanel2" data-position="right" data-display="push" data-theme="b" class="ui-panel ui-panel-position-right ui-panel-display-push ui-body-b ui-panel-animate ui-panel-closed">
+
+                    <div class="ui-panel-inner"><h3>Right Panel: Push</h3><p>This panel is positioned on the right with the push display mode. The panel markup is <em>after</em> the header, content and footer in the source order.</p><p>To close, click off the panel, swipe left or right, hit the Esc key, or use the button below:</p><a href="#demo-links" data-rel="close" class="ui-btn ui-shadow ui-corner-all ui-btn-a ui-icon-delete ui-btn-icon-left ui-btn-inline">Close panel</a></div>
+
+
+
+
+                </div>
+
+            </form>
+
+
+        </div>
+    </div>
+
+</body>
+</html>
