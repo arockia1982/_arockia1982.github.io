@@ -4,10 +4,7 @@
     <meta name="viewport" content="width = device-width, initial-scale = 1">
     <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
 
-
-    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-    <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
-         
+    <link rel="stylesheet" href="https://js.arcgis.com/3.29/esri/css/esri.css">
 
     <style>
         legend {
@@ -23,7 +20,58 @@
         input {
             margin: .4rem;
         }
+
+        #map {
+            padding: 0;
+            margin: 0;
+            height: 100%;
+        }
+
+        #LocateButton {
+            position: absolute;
+            top: 95px;
+            left: 20px;
+            z-index: 50;
+        }
+
+        .error {
+            color: red;
+        }
     </style>
+
+
+    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <script src=" http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
+
+
+
+
+    <script src="https://js.arcgis.com/3.29/"></script>
+    <script>
+        var map;
+
+        require([
+            "esri/map",
+            "esri/dijit/LocateButton",
+            "dojo/domReady!"
+        ], function (
+            Map, LocateButton
+        ) {
+
+                map = new Map("map", {
+                    center: [-56.049, 38.485],
+                    zoom: 3,
+                    basemap: "streets"
+                });
+
+                geoLocate = new LocateButton({
+                    map: map
+                }, "LocateButton");
+                geoLocate.startup();
+
+            });
+    </script>
 </head>
 
 <body>
@@ -34,54 +82,83 @@
         </div>
 
         <div data-role="main" class="ui-content">
-            <form method="post" action="demo.php">
-                <label for="Contractor">Contractor</label>
-                <input type="text" name="contractor" id="contractor"
-                       placeholder="Contractor">
 
-                <label for="projectsite">Project site</label>
-                <input type="text" name="projectsite" id="projectsite"
-                       placeholder="Project site">
+            <form id="form1" method="post">
+
+
+                <div data-role="fieldcontainer">
+                    <label for="Contractor">Contractor</label>
+                    <input type="text" name="contractor" id="contractor"
+                           placeholder="Contractor">
+                </div>
+
+                <div data-role="fieldcontainer">
+                    <label for="projectsite">Project site</label>
+                    <input type="text" name="projectsite" id="projectsite"
+                           placeholder="Project site">
+                </div>
+
 
                 <fieldset style="border:1px solid green;padding: 5px">
                     <legend>Air Quality Standards</legend>
 
-                    <label for="Contractor">Sulfer Dioxide (SO2)</label>
-                    <input type="text" name="contractor" id="contractor"
-                           placeholder="Contractor">
+                    <div data-role="fieldcontainer">
+                        <label for="SO2">Sulfer Dioxide (SO2)</label>
+                        <input type="text" name="SO2" id="SO2"
+                               placeholder="Contractor">
+                    </div>
 
-                    <label for="projectsite">Particulate Matter (PM10)</label>
-                    <input type="text" name="projectsite" id="projectsite"
-                           placeholder="Project site">
+                    <div data-role="fieldcontainer">
+                        <label for="PM10">Particulate Matter (PM10)</label>
+                        <input type="text" name="PM10" id="PM10"
+                               placeholder="Project site">
+                    </div>
 
-                    <label for="projectsite">Particulate Matter (PM2.5)</label>
-                    <input type="text" name="projectsite" id="projectsite"
-                           placeholder="Project site">
+                    <div data-role="fieldcontainer">
+                        <label for="PM25">Particulate Matter (PM2.5)</label>
+                        <input type="text" name="PM25" id="PM25"
+                               placeholder="Project site">
+                    </div>
 
-                    <label for="projectsite">Nitrogen Dioxide (NO2)</label>
-                    <input type="text" name="projectsite" id="projectsite"
-                           placeholder="Project site">
+                    <div data-role="fieldcontainer">
+                        <label for="projectsite">Nitrogen Dioxide (NO2)</label>
+                        <input type="text" name="NO2" id="NO2"
+                               placeholder="Project site">
+                    </div>
 
-                    <label for="projectsite">Ozone (O3)</label>
-                    <input type="text" name="projectsite" id="projectsite"
-                           placeholder="Project site">
+                    <div data-role="fieldcontainer">
+                        <label for="CarboneMonoxide">Carbone Monoxide (CO)</label>
+                        <input type="text" name="CarboneMonoxide" id="CarboneMonoxide"
+                               placeholder="Carbone Monoxide">
+                    </div>
 
-                    <label for="projectsite">Carbone Monoxide (co)</label>
-                    <input type="text" name="projectsite" id="projectsite"
-                           placeholder="Project site">
+                    <div data-role="fieldcontainer">
+                        <label for="Ozone">Ozone (O3)</label>
+                        <input type="text" name="Ozone" id="Ozone"
+                               placeholder="Ozone">
+                    </div>
 
-                    <label for="projectsite">Lead</label>
-                    <input type="text" name="projectsite" id="projectsite"
-                           placeholder="Project site">
+                    <div data-role="fieldcontainer">
+                        <label for="Lead">Lead</label>
+                        <input type="text" name="Lead" id="Lead"
+                               placeholder="Lead">
+                    </div>
 
 
-                    <label for="projectsite">HydroCarbons</label>
-                    <input type="text" name="projectsite" id="projectsite"
-                           placeholder="Project site">
 
-                    <label for="projectsite">VOC PPB</label>
-                    <input type="text" name="projectsite" id="projectsite"
-                           placeholder="Project site">
+
+                    <div data-role="fieldcontainer">
+                        <label for="projectsite">HydroCarbons</label>
+                        <input type="text" name="projectsite" id="projectsite"
+                               placeholder="Project site">
+                    </div>
+
+                    <div data-role="fieldcontainer">
+                        <label for="projectsite">VOC PPB</label>
+                        <input type="text" name="projectsite" id="projectsite"
+                               placeholder="Project site">
+                    </div>
+
 
                 </fieldset>
 
@@ -116,40 +193,182 @@
                 <input type="time" name="txtTime" id="txtTime">
 
                 <label for="btnLocation">Please set your Location</label>
-                <a href="#rightpanel2" class="ui-btn ui-shadow ui-corner-all ui-btn-inline ui-btn-mini">Push</a>
-                <button id="btnLocation" onclick="getLocation()">Set Location</button>
-                <p id="demo"></p>
 
 
-                <script>
+                <input type="button" data-icon="check" value="Set Location" id="btnLocation" />
 
-                    function getLocation() {
+
+                <div data-role="fieldcontainer">
+                    <label for="Latitude">Latitude:</label>
+                    <input type="text" name="Latitude" id="Latitude"
+                           placeholder="Latitude">
+                </div>
+
+                <div data-role="fieldcontainer">
+                    <label for="Longitude">Longitude:</label>
+                    <input type="text" name="Longitude" id="Longitude"
+                           placeholder="Longitude">
+                </div>
+
+
+                <div data-role="footer" data-position="fixed">
+                    <input type="button" data-icon="delete" value="Cancel" id="cancel" />
+                    <input type="submit" data-icon="check" value="Submit" id="submit" />
+                </div>
+
+            </form>
+
+
+            <script>
+                $(document).ready(function () {
+
+                    function today() {
+                        let d = new Date();
+                        let currDate = d.getDate();
+                        let currMonth = d.getMonth() + 1;
+                        let currYear = d.getFullYear();
+                        return currYear + "-" + ((currMonth < 10) ? '0' + currMonth : currMonth) + "-" + ((currDate < 10) ? '0' + currDate : currDate);
+                    }
+                    
+                    var d = new Date();         
+           
+                    $('#txtTime').val(d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds());
+
+     
+                    $('#txtDate').val(today());
+
+                    $('#btnLocation').click(function () {
+
                         if (navigator.geolocation) {
                             navigator.geolocation.getCurrentPosition(showPosition);
                         } else {
                             x.innerHTML = "Geolocation is not supported by this browser.";
                         }
-                    }
 
-                    function showPosition(position) {
-                        var x = document.getElementById("demo");
-                        x.innerHTML = "Latitude: " + position.coords.latitude +
-                            "<br>Longitude: " + position.coords.longitude;
-                    }
-                </script>
-
-
-                <div data-role="panel" id="rightpanel2" data-position="right" data-display="push" data-theme="b" class="ui-panel ui-panel-position-right ui-panel-display-push ui-body-b ui-panel-animate ui-panel-closed">
-
-                    <div class="ui-panel-inner"><h3>Right Panel: Push</h3><p>This panel is positioned on the right with the push display mode. The panel markup is <em>after</em> the header, content and footer in the source order.</p><p>To close, click off the panel, swipe left or right, hit the Esc key, or use the button below:</p><a href="#demo-links" data-rel="close" class="ui-btn ui-shadow ui-corner-all ui-btn-a ui-icon-delete ui-btn-icon-left ui-btn-inline">Close panel</a></div>
+                        function showPosition(position) {
+                            var x = document.getElementById("Latitude");
+                            var y = document.getElementById("Longitude");
+                            x.value = position.coords.latitude;
+                            y.value = position.coords.longitude;
+                        }
+                    });
 
 
+                    $('#submit').click(function () {
 
+                        $('#form1').validate({
+                            rules: {
+                                contractor: {
+                                    required: true
+                                },
+                                projectsite: {
+                                    required: true
+                                },
+                                SO2: {
+                                    required: true
+                                },
+                                PM10: {
+                                    required: true
+                                },
+                                PM25: {
+                                    required: true
+                                },
+                                NO2: {
+                                    required: true
+                                }
+                                ,
+                                O3: {
+                                    required: true
+                                },
+                                CO: {
+                                    required: true
+                                },
+                                Lead: {
+                                    required: true
+                                },
+                                HydroCarbons: {
+                                    required: true
+                                }
+                                ,
+                                txtDate: {
+                                    required: true
+                                }
+                                ,
+                                txtTime: {
+                                    required: true
+                                }
+                                ,
+                                Latitude: {
+                                    required: true
+                                }
+                                ,
+                                Longitude: {
+                                    required: true
+                                }
+                            },
+                            messages: {
+                                contractor: {
+                                    required: "Please enter contractor."
+                                },
+                                projectsite: {
+                                    required: "Please enter projectsite"
+                                },
+                                SO2: {
+                                    required: "Please enter Sulfer Dioxide"
+                                },
+                                PM10: {
+                                    required: "Please enter Particulate Matter (PM10)"
+                                },
+                                PM25: {
+                                    required: "Please enter Particulate Matter (PM2.5)"
+                                },
+                                NO2: {
+                                    required: "Please enter Sulfer Dioxide"
+                                },
+                                O3: {
+                                    required: "Please enter Ozone"
+                                },
+                                CO: {
+                                    required: "Please enter Carbon Monoxide"
+                                },
+                                Lead: {
+                                    required: "Please enter Lead"
+                                },
+                                HydroCarbons: {
+                                    required: "Please enter Hydro Carbons"
+                                },
+                                
+                                txtDate: {
+                                    required: "Please enter Date"
+                                },
+                                
+                                txtTime: {
+                                    required: "Please enter Time"
+                                },
+                                
+                                Latitude: {
+                                    required: "Latitude required"
+                                },
+                                
+                                Longitude: {
+                                    required: "Longitude required"
+                                }
+                            },
+                            errorPlacement: function (error, element) {
+                                error.appendTo(element.parent().prev());
+                            },
+                            submitHandler: function (form) {
+                                $(':mobile-pagecontainer').pagecontainer('change', '#success', {
+                                    reload: false
+                                });
+                                return false;
+                            }
+                        });
+                    });
 
-                </div>
+                });
 
-            </form>
-
+            </script>
 
         </div>
     </div>
