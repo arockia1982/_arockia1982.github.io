@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
@@ -26,12 +28,33 @@
     <script src="https://jquery-datatables-column-filter.googlecode.com/svn/trunk/media/js/jquery.dataTables.columnFilter.js"></script>
     <script src="https://cdn.datatables.net/responsive/1.0.4/js/dataTables.responsive.js"></script>
 
+    <style>
+        table.dataTable thead tr {
+            background-color: #7E868B;
+            color:white;
+        }
+    </style>
+
     <script>
 
-        
         $(document).on('pageshow', '#Rpr', function () {
-            
-            var table = $('#example').DataTable({
+
+            var table = $('#tblAirQuality').DataTable({
+                responsive: true,
+                destroy: true,
+                searching: false,
+                lengthChange: false // Will Disabled Record number per page
+            });
+
+            var table = $('#tblNoise').DataTable({
+                responsive: true,
+                destroy: true,
+                searching: false,
+                lengthChange: false // Will Disabled Record number per page
+            });
+
+
+            var table = $('#tblSoil').DataTable({
                 responsive: true,
                 destroy: true,
                 searching: false,
@@ -59,8 +82,8 @@
 
         <div data-role="main" class="ui-content">
             <ul data-role="listview" data-inset="true">
-
-                <li><a href="#Rpr">Report</a></li>
+         
+                <li><a href="#Rpr">Master Details</a></li>
             </ul>
         </div>
 
@@ -69,17 +92,18 @@
         </div>
     </div>
 
-    </div>
     <div data-role="page" id="Rpr">
+
         <div data-role="header" data-position="inline" data-fullscreen="true">
             <a href="#" class="ui-btn ui-icon-arrow-l ui-btn-icon-notext ui-shadow ui-corner-all" data-rel="back">Back</a>
-            <h1>Report</h1>
+            <p style="font-size:12pt;left:0px;padding-left:50px">Air Quality</p>
         </div>
+
 
         <div class="container">
 
 
-            <table id="example" class="display nowrap" cellspacing="0" width="100%">
+            <table id="tblAirQuality" class="display nowrap" cellspacing="0" width="100%">
                 <thead>
                     <tr>
                         <th>First name</th>
@@ -126,7 +150,123 @@
 
         </div>
 
+
+        <div style="height:10px;background-color:silver">
+
+        </div>
+
+        <div data-role="header" data-position="inline" data-fullscreen="true">
+            <p style="font-size:12pt;left:0px;padding-left:50px">Noise</p>
+        </div>
+
+        <div class="container">
+
+            <table id="tblNoise" class="display nowrap" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>First name</th>
+                        <th>Last name</th>
+                        <th>Position</th>
+                        <th>Office</th>
+                        <th>Age</th>
+                        <th>Start date</th>
+                        <th>Salary</th>
+                        <th>Extn.</th>
+                        <th>E-mail</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td>Tiger</td>
+                        <td>Nixon</td>
+                        <td>System Architect</td>
+                        <td>Edinburgh</td>
+                        <td>61</td>
+                        <td>2011/04/25</td>
+                        <td>$320,800</td>
+                        <td>5421</td>
+                        <td>t.nixon@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Garrett</td>
+                        <td>Winters</td>
+                        <td>Accountant</td>
+                        <td>Tokyo</td>
+                        <td>63</td>
+                        <td>2011/07/25</td>
+                        <td>$170,750</td>
+                        <td>8422</td>
+                        <td>g.winters@datatables.net</td>
+                    </tr>
+
+                </tbody>
+            </table>
+
+
+
+
+        </div>
+
+
+        <div style="height:10px;background-color:silver">
+
+        </div>
+
+        <div data-role="header" data-position="inline" data-fullscreen="true">
+
+            <p style="font-size:12pt;left:0px;padding-left:50px">Soil</p>
+        </div>
+
+        <div class="container">
+
+            <table id="tblSoil" class="display nowrap" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>First name</th>
+                        <th>Last name</th>
+                        <th>Position</th>
+                        <th>Office</th>
+                        <th>Age</th>
+                        <th>Start date</th>
+                        <th>Salary</th>
+                        <th>Extn.</th>
+                        <th>E-mail</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td>Tiger</td>
+                        <td>Nixon</td>
+                        <td>System Architect</td>
+                        <td>Edinburgh</td>
+                        <td>61</td>
+                        <td>2011/04/25</td>
+                        <td>$320,800</td>
+                        <td>5421</td>
+                        <td>t.nixon@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Garrett</td>
+                        <td>Winters</td>
+                        <td>Accountant</td>
+                        <td>Tokyo</td>
+                        <td>63</td>
+                        <td>2011/07/25</td>
+                        <td>$170,750</td>
+                        <td>8422</td>
+                        <td>g.winters@datatables.net</td>
+                    </tr>
+
+                </tbody>
+            </table>
+
+
+        </div>
+
     </div>
 
 </body>
 </html>
+
