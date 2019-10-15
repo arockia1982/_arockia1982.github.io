@@ -1,377 +1,130 @@
 <!DOCTYPE html>
-<html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
+    <meta charset="utf-8" />
+    <title></title>
     <meta name="viewport" content="width = device-width, initial-scale = 1">
-    <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
 
-    <link rel="stylesheet" href="https://js.arcgis.com/3.29/esri/css/esri.css">
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
 
-    <style>
-        legend {
-            background-color: #000;
-            color: #fff;
-            padding: 3px 6px;
-        }
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.4/jquery.mobile-1.4.4.min.css">
 
-        .output {
-            font: 1rem 'Fira Sans', sans-serif;
-        }
+    <link rel="stylesheet" href="http://cdn.datatables.net/1.10.5/css/jquery.dataTables.min.css">
 
-        input {
-            margin: .4rem;
-        }
-
-        #map {
-            padding: 0;
-            margin: 0;
-            height: 100%;
-        }
-
-        #LocateButton {
-            position: absolute;
-            top: 95px;
-            left: 20px;
-            z-index: 50;
-        }
-
-        .error {
-            color: red;
-        }
-    </style>
-
-
-    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-    <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
-    <script src=" https://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
+    <link rel="stylesheet" href=" http://cdn.datatables.net/responsive/1.0.4/css/dataTables.responsive.css">
 
 
 
 
-    <script src="https://js.arcgis.com/3.29/"></script>
+    <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+
+    <script src="http://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+
+    <script src="http://code.jquery.com/mobile/1.4.4/jquery.mobile-1.4.4.min.js"></script>
+    <script src="http://cdn.datatables.net/1.10.5/js/jquery.dataTables.min.js"></script>
+    <script src="http://jquery-datatables-column-filter.googlecode.com/svn/trunk/media/js/jquery.dataTables.columnFilter.js"></script>
+    <script src="http://cdn.datatables.net/responsive/1.0.4/js/dataTables.responsive.js"></script>
+
     <script>
-        var map;
 
-        require([
-            "esri/map",
-            "esri/dijit/LocateButton",
-            "dojo/domReady!"
-        ], function (
-            Map, LocateButton
-        ) {
-
-                map = new Map("map", {
-                    center: [-56.049, 38.485],
-                    zoom: 3,
-                    basemap: "streets"
-                });
-
-                geoLocate = new LocateButton({
-                    map: map
-                }, "LocateButton");
-                geoLocate.startup();
+        $(document).on('pageshow', '#Rpr', function () {
+            var table = $('#example').DataTable({
+                responsive: true,
 
             });
+
+
+
+        });
     </script>
+
+
+
+
+
 </head>
-
 <body>
-    <div data-role="page">
-        <div data-role="header">
-            <p style="font-size:12pt;padding-left:10px"> Environment Mapping Project </h5>
+    <div data-role="page" id="main">
 
+
+        <!-- Giriş -->
+        <div data-role="header" data-position="inline" data-fullscreen="true">
+            <a href="#myPanel" class="ui-btn ui-btn-inline">List</a>
+            <h1>Main List</h1>
         </div>
+
 
         <div data-role="main" class="ui-content">
+            <ul data-role="listview" data-inset="true">
 
-            <form id="form1" method="post">
+                <li><a href="#Rpr">Report</a></li>
+            </ul>
+        </div>
 
-
-                <div data-role="fieldcontainer">
-                    <label for="Contractor">Contractor</label>
-                    <input type="text" name="contractor" id="contractor"
-                           placeholder="Contractor">
-                </div>
-
-                <div data-role="fieldcontainer">
-                    <label for="projectsite">Project site</label>
-                    <input type="text" name="projectsite" id="projectsite"
-                           placeholder="Project site">
-                </div>
-
-
-                <fieldset style="border:1px solid green;padding: 5px">
-                    <legend>Air Quality Standards</legend>
-
-                    <div data-role="fieldcontainer">
-                        <label for="SO2">Sulfer Dioxide (SO2)</label>
-                        <input type="text" name="SO2" id="SO2"
-                               placeholder="Contractor">
-                    </div>
-
-                    <div data-role="fieldcontainer">
-                        <label for="PM10">Particulate Matter (PM10)</label>
-                        <input type="text" name="PM10" id="PM10"
-                               placeholder="ProParticulate Matter (PM10)">
-                    </div>
-
-                    <div data-role="fieldcontainer">
-                        <label for="PM25">Particulate Matter (PM2.5)</label>
-                        <input type="text" name="PM25" id="PM25"
-                               placeholder="Particulate Matter (PM2.5)">
-                    </div>
-
-                    <div data-role="fieldcontainer">
-                        <label for="projectsite">Nitrogen Dioxide (NO2)</label>
-                        <input type="text" name="NO2" id="NO2"
-                               placeholder="Nitrogen Dioxide (NO2)">
-                    </div>
-
-                    <div data-role="fieldcontainer">
-                        <label for="CarboneMonoxide">Carbone Monoxide (CO)</label>
-                        <input type="text" name="CarboneMonoxide" id="CarboneMonoxide"
-                               placeholder="Carbone Monoxide">
-                    </div>
-
-                    <div data-role="fieldcontainer">
-                        <label for="Ozone">Ozone (O3)</label>
-                        <input type="text" name="Ozone" id="Ozone"
-                               placeholder="Ozone">
-                    </div>
-
-                    <div data-role="fieldcontainer">
-                        <label for="Lead">Lead</label>
-                        <input type="text" name="Lead" id="Lead"
-                               placeholder="Lead">
-                    </div>
-
-
-
-
-                    <div data-role="fieldcontainer">
-                        <label for="projectsite">HydroCarbons</label>
-                        <input type="text" name="HydroCarbons" id="HydroCarbons"
-                               placeholder="HydroCarbons">
-                    </div>
-
-                    <div data-role="fieldcontainer">
-                        <label for="projectsite">VOC PPB</label>
-                        <input type="text" name="VOCPPB" id="VOCPPB"
-                               placeholder="VOC PPB">
-                    </div>
-
-
-                </fieldset>
-
-                <fieldset style="border:1px solid green;padding: 5px">
-                    <ul>
-                        <li>
-                            <label for="AirQualityStandards"> Air Quality Standards</label>
-                            <input type="range" name="AirQualityStandards" min="0" max="10">
-                        </li>
-                        <li>
-                            <label for="AirQualityStandards"> Soil Contamination</label>
-                            <input type="range" name="SoilContamination" min="0" max="10">
-                        </li>
-                        <li>
-                            <label for="GroundWaterMonitoring"> Ground Water Monitoring</label>
-                            <input type="range" name="GroundWaterMonitoring" min="0" max="10">
-                        </li>
-                        <li>
-                            <label for="NonIonizationRadiationsMonitoring">Non-Ionization  Radiations Monitoring</label>
-                            <input type="range" name="NonIonizationRadiationsMonitoring" min="0" max="10">
-                        </li>
-                        <li>
-                            <label for=" NoiseMonitoring"> Noise Monitoring</label>
-                            <input type="range" name="NoiseMonitoring" min="0" max="10">
-                        </li>
-                    </ul>
-                </fieldset>
-
-
-                <label for="txtDate">Date and Time </label>
-                <input type="date" name="txtDate" id="txtDate">
-                <input type="time" name="txtTime" id="txtTime">
-
-                <label for="btnLocation">Please set your Location</label>
-
-
-                <input type="button" data-icon="check" value="Set Location" id="btnLocation" />
-
-
-                <div data-role="fieldcontainer">
-                    <label for="Latitude">Latitude:</label>
-                    <input type="text" name="Latitude" id="Latitude"
-                           placeholder="Latitude">
-                </div>
-
-                <div data-role="fieldcontainer">
-                    <label for="Longitude">Longitude:</label>
-                    <input type="text" name="Longitude" id="Longitude"
-                           placeholder="Longitude">
-                </div>
-
-
-                <div data-role="footer" data-position="fixed">
-                    <input type="button" data-icon="delete" value="Cancel" id="cancel" />
-                    <input type="submit" data-icon="check" value="Submit" id="submit" />
-                </div>
-
-            </form>
-
-
-            <script>
-                $(document).ready(function () {
-
-                    function today() {
-                        let d = new Date();
-                        let currDate = d.getDate();
-                        let currMonth = d.getMonth() + 1;
-                        let currYear = d.getFullYear();
-                        return currYear + "-" + ((currMonth < 10) ? '0' + currMonth : currMonth) + "-" + ((currDate < 10) ? '0' + currDate : currDate);
-                    }
-                    
-                    var d = new Date();         
-           
-                    $('#txtTime').val(d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds());
-
-     
-                    $('#txtDate').val(today());
-
-                    $('#btnLocation').click(function () {
-
-                        if (navigator.geolocation) {
-                            navigator.geolocation.getCurrentPosition(showPosition);
-                        } else {
-                            x.innerHTML = "Geolocation is not supported by this browser.";
-                        }
-
-                        function showPosition(position) {
-                            var x = document.getElementById("Latitude");
-                            var y = document.getElementById("Longitude");
-                            x.value = position.coords.latitude;
-                            y.value = position.coords.longitude;
-                        }
-                    });
-
-
-                    $('#submit').click(function () {
-
-                        $('#form1').validate({
-                            rules: {
-                                contractor: {
-                                    required: true
-                                },
-                                projectsite: {
-                                    required: true
-                                },
-                                SO2: {
-                                    required: true
-                                },
-                                PM10: {
-                                    required: true
-                                },
-                                PM25: {
-                                    required: true
-                                },
-                                NO2: {
-                                    required: true
-                                }
-                                ,
-                                O3: {
-                                    required: true
-                                },
-                                CO: {
-                                    required: true
-                                },
-                                Lead: {
-                                    required: true
-                                },
-                                HydroCarbons: {
-                                    required: true
-                                }
-                                ,
-                                txtDate: {
-                                    required: true
-                                }
-                                ,
-                                txtTime: {
-                                    required: true
-                                }
-                                ,
-                                Latitude: {
-                                    required: true
-                                }
-                                ,
-                                Longitude: {
-                                    required: true
-                                }
-                            },
-                            messages: {
-                                contractor: {
-                                    required: "Please enter contractor."
-                                },
-                                projectsite: {
-                                    required: "Please enter projectsite"
-                                },
-                                SO2: {
-                                    required: "Please enter Sulfer Dioxide"
-                                },
-                                PM10: {
-                                    required: "Please enter Particulate Matter (PM10)"
-                                },
-                                PM25: {
-                                    required: "Please enter Particulate Matter (PM2.5)"
-                                },
-                                NO2: {
-                                    required: "Please enter Sulfer Dioxide"
-                                },
-                                O3: {
-                                    required: "Please enter Ozone"
-                                },
-                                CO: {
-                                    required: "Please enter Carbon Monoxide"
-                                },
-                                Lead: {
-                                    required: "Please enter Lead"
-                                },
-                                HydroCarbons: {
-                                    required: "Please enter Hydro Carbons"
-                                },
-                                
-                                txtDate: {
-                                    required: "Please enter Date"
-                                },
-                                
-                                txtTime: {
-                                    required: "Please enter Time"
-                                },
-                                
-                                Latitude: {
-                                    required: "Latitude required"
-                                },
-                                
-                                Longitude: {
-                                    required: "Longitude required"
-                                }
-                            },
-                            errorPlacement: function (error, element) {
-                                error.appendTo(element.parent().prev());
-                            },
-                            submitHandler: function (form) {
-                                $(':mobile-pagecontainer').pagecontainer('change', '#success', {
-                                    reload: false
-                                });
-                                return false;
-                            }
-                        });
-                    });
-
-                });
-
-            </script>
-
+        <div data-role="footer" data-fullscreen="true">
+            <h1></h1>
         </div>
     </div>
-  
+
+    </div>
+    <div data-role="page" id="Rpr">
+        <div data-role="header" data-position="inline" data-fullscreen="true">
+            <a href="#" class="ui-btn ui-icon-arrow-l ui-btn-icon-notext ui-shadow ui-corner-all" data-rel="back">Back</a>
+            <h1>Report</h1>
+        </div>
+
+        <div class="container">
+
+
+            <table id="example" class="display nowrap" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>First name</th>
+                        <th>Last name</th>
+                        <th>Position</th>
+                        <th>Office</th>
+                        <th>Age</th>
+                        <th>Start date</th>
+                        <th>Salary</th>
+                        <th>Extn.</th>
+                        <th>E-mail</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td>Tiger</td>
+                        <td>Nixon</td>
+                        <td>System Architect</td>
+                        <td>Edinburgh</td>
+                        <td>61</td>
+                        <td>2011/04/25</td>
+                        <td>$320,800</td>
+                        <td>5421</td>
+                        <td>t.nixon@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Garrett</td>
+                        <td>Winters</td>
+                        <td>Accountant</td>
+                        <td>Tokyo</td>
+                        <td>63</td>
+                        <td>2011/07/25</td>
+                        <td>$170,750</td>
+                        <td>8422</td>
+                        <td>g.winters@datatables.net</td>
+                    </tr>
+
+                </tbody>
+            </table>
+
+
+
+
+        </div>
+
+    </div>
+
 </body>
 </html>
