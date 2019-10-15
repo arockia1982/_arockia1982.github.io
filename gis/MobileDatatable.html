@@ -39,14 +39,49 @@
 
         $(document).on('pageshow', '#Rpr', function () {
 
+        
+
             var table = $('#tblAirQuality').DataTable({
                 responsive: true,
                 destroy: true,
                 searching: false,
-                lengthChange: false // Will Disabled Record number per page
+                lengthChange: false, // Will Disabled Record number per page,
+                columns: [
+
+                    { 'data': 'name', "title": "Name" },
+                    { 'data': 'position', "title": "Position"  },
+                    { 'data': 'salary', "title": "Salary"  },
+                    {// this is Actions Column 
+                        mRender: function (data, type, row) {
+                            var linkEdit = '<a>EDIT</a>';
+                            linkEdit = linkEdit.replace("-1", row.ID);
+   
+
+                            var linkDelete = '<a>DELETE</a>';
+                            linkDelete = linkDelete.replace("-1", row.ID);
+
+                            return linkEdit + " | " + linkDelete;
+                        }
+                    }]
             });
 
-            var table = $('#tblNoise').DataTable({
+
+            table.rows.add([{
+                "name": "Tiger Nixon",
+                "position": "System Architect",
+                "salary": "$3,120"
+             
+            }, {
+                "name": "Garrett Winters",
+                "position": "Director",
+                "salary": "$5,300"
+             
+            }])
+                .draw();
+
+
+
+            var table1 = $('#tblNoise').DataTable({
                 responsive: true,
                 destroy: true,
                 searching: false,
@@ -54,7 +89,7 @@
             });
 
 
-            var table = $('#tblSoil').DataTable({
+            var table2 = $('#tblSoil').DataTable({
                 responsive: true,
                 destroy: true,
                 searching: false,
@@ -74,17 +109,23 @@
 
 
         <!-- Giriş -->
-        <div data-role="header" data-position="inline" data-fullscreen="true">
-            <a href="#myPanel" class="ui-btn ui-btn-inline">List</a>
-            <h1>Main List</h1>
+
+
+        <div data-role="header">
+            <h1>Environmental Mapping Project</h1>
         </div>
 
 
         <div data-role="main" class="ui-content">
             <ul data-role="listview" data-inset="true">
-         
+                <li><a href="#dataentry">Data Entry</a></li>
+
+            </ul>
+            <ul data-role="listview" data-inset="true">
+
                 <li><a href="#Rpr">Master Details</a></li>
             </ul>
+
         </div>
 
         <div data-role="footer" data-fullscreen="true">
@@ -104,45 +145,7 @@
 
 
             <table id="tblAirQuality" class="display nowrap" cellspacing="0" width="100%">
-                <thead>
-                    <tr>
-                        <th>First name</th>
-                        <th>Last name</th>
-                        <th>Position</th>
-                        <th>Office</th>
-                        <th>Age</th>
-                        <th>Start date</th>
-                        <th>Salary</th>
-                        <th>Extn.</th>
-                        <th>E-mail</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    <tr>
-                        <td>Tiger</td>
-                        <td>Nixon</td>
-                        <td>System Architect</td>
-                        <td>Edinburgh</td>
-                        <td>61</td>
-                        <td>2011/04/25</td>
-                        <td>$320,800</td>
-                        <td>5421</td>
-                        <td>t.nixon@datatables.net</td>
-                    </tr>
-                    <tr>
-                        <td>Garrett</td>
-                        <td>Winters</td>
-                        <td>Accountant</td>
-                        <td>Tokyo</td>
-                        <td>63</td>
-                        <td>2011/07/25</td>
-                        <td>$170,750</td>
-                        <td>8422</td>
-                        <td>g.winters@datatables.net</td>
-                    </tr>
-
-                </tbody>
+               
             </table>
 
 
