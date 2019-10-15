@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <meta name="viewport" content="width = device-width, initial-scale = 1">
+
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
+
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.4/jquery.mobile-1.4.4.min.css">
+
+    <link rel="stylesheet" href="http://cdn.datatables.net/1.10.5/css/jquery.dataTables.min.css">
+
+    <link rel="stylesheet" href=" http://cdn.datatables.net/responsive/1.0.4/css/dataTables.responsive.css">
+
+
+
+
+    <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+
+    <script src="http://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+
+    <script src="http://code.jquery.com/mobile/1.4.4/jquery.mobile-1.4.4.min.js"></script>
+    <script src="http://cdn.datatables.net/1.10.5/js/jquery.dataTables.min.js"></script>
+    <script src="http://jquery-datatables-column-filter.googlecode.com/svn/trunk/media/js/jquery.dataTables.columnFilter.js"></script>
+    <script src="http://cdn.datatables.net/responsive/1.0.4/js/dataTables.responsive.js"></script>
+
+    <script>
+
+        $(document).on('pageshow', '#Rpr', function () {
+            var table = $('#example').DataTable({
+                responsive: true,
+
+            });
+
+
+
+        });
+    </script>
+
+
+
+
+
+</head>
+<body>
+    <div data-role="page" id="main">
+
+
+        <!-- Giriş -->
+        <div data-role="header" data-position="inline" data-fullscreen="true">
+            <a href="#myPanel" class="ui-btn ui-btn-inline">List</a>
+            <h1>Main List</h1>
+        </div>
+
+
+        <div data-role="main" class="ui-content">
+            <ul data-role="listview" data-inset="true">
+
+                <li><a href="#Rpr">Report</a></li>
+            </ul>
+        </div>
+
+        <div data-role="footer" data-fullscreen="true">
+            <h1></h1>
+        </div>
+    </div>
+
+    </div>
+    <div data-role="page" id="Rpr">
+        <div data-role="header" data-position="inline" data-fullscreen="true">
+            <a href="#" class="ui-btn ui-icon-arrow-l ui-btn-icon-notext ui-shadow ui-corner-all" data-rel="back">Back</a>
+            <h1>Report</h1>
+        </div>
+
+        <div class="container">
+
+
+            <table id="example" class="display nowrap" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>First name</th>
+                        <th>Last name</th>
+                        <th>Position</th>
+                        <th>Office</th>
+                        <th>Age</th>
+                        <th>Start date</th>
+                        <th>Salary</th>
+                        <th>Extn.</th>
+                        <th>E-mail</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td>Tiger</td>
+                        <td>Nixon</td>
+                        <td>System Architect</td>
+                        <td>Edinburgh</td>
+                        <td>61</td>
+                        <td>2011/04/25</td>
+                        <td>$320,800</td>
+                        <td>5421</td>
+                        <td>t.nixon@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Garrett</td>
+                        <td>Winters</td>
+                        <td>Accountant</td>
+                        <td>Tokyo</td>
+                        <td>63</td>
+                        <td>2011/07/25</td>
+                        <td>$170,750</td>
+                        <td>8422</td>
+                        <td>g.winters@datatables.net</td>
+                    </tr>
+
+                </tbody>
+            </table>
+
+
+
+
+        </div>
+
+    </div>
+
+</body>
+</html>
