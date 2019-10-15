@@ -28,15 +28,15 @@
 
     <script>
 
+        
         $(document).on('pageshow', '#Rpr', function () {
+            
             var table = $('#example').DataTable({
                 responsive: true,
                 destroy: true,
-                searching: false
-
+                searching: false,
+                lengthChange: false // Will Disabled Record number per page
             });
-
-
 
         });
     </script>
